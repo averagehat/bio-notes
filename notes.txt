@@ -1,0 +1,56 @@
+.sam file specs: http://samtools.github.io/hts-specs/SAMv1.pdf
+
+PIPELINE
+========
+default setup gives space problems b/c one of the records is so big
+igv to view the bam files
+quals is the light green, depth is the deep blue in front. 
+The pipeline maps the sequences in the 780/ directory to the reference fasta using BWA. 
+runsample.py is main script
+lots of documentation information is hidden in runsample.py
+the bwa-mapper is what creates the bam file. It does so from the directory filled with .fasta files and the reference fasta. 
+Sometimes the reads are trimmed first, based on quality, or sometimes the first view nucleotides
+graphsample.py graphs everything, importing bam_to_qualdepth and graph_qualdepth
+a consensus fasta file is also output
+
+cmd = ['samtools','view','-Sb','-']\
+-S > deprecated, used to be used for .sam files as input (now looks at
+extension)
+-b > output in .bam format 
+- > ouptut to stdout?  no, use stdout as the input file
+
+    Convert a bam file to fastq format by simply extracting the first, 10th and 11th columns from the sam output
+
+    http://samtools.github.io/hts-specs/SAMv1.pdf
+    1st column is QNAME
+    10th column is SEQ
+    11th column is QUAL
+samtools.py has view etc. functions 
+Current Pipeline Stages
+-----------------------
+
+* :py:mod:`ngs_mapper.trim_reads`
+* :py:mod:`ngs_mapper.run_bwa_on_samplename <ngs_mapper.run_bwa>`
+* :py:mod:`ngs_mapper.tagreads`
+* :py:mod:`ngs_mapper.base_caller`
+* :doc:`../scripts/gen_flagstats`
+* :py:mod:`ngs_mapper.graphsample`
+* :py:mod:`ngs_mapper.fqstats`
+* :py:mod:`ngs_mapper.vcf_consensus`
+
+
+
+SUBSAMPLEBAM
+===========
+SeqIO is  a red herring: reference_info is not used
+
+very difficult to debug as is because many are run as subprocesses
+why is this project not using the pipeline's "samtools.py"? 
+
+BioPython has no .sam/.bam parsing. 
+pysam does. pysam requires cython
+fasta name, id, description etc. are all parsed the same
+rname = name of reference genome
+qname == name of the matching genome
+
+An alignment may be given multiple times if it is overlapping several regions.

@@ -1,0 +1,56 @@
+DNA Sequencing
+Sequencing full genomes all at once is expensive and error prone. Instead, we read a large number of small segments at different places on the genome. We can determine the ordering of these segments [only] by finding overlaps between them (and a ref. genome).
+
+The advent of high-throughput sequencing (HTS) techniques at the end of the 2000 decade has led to another application of the Burrows–Wheeler transformation. In HTS, DNA is fragmented into small pieces, of which the first few bases are sequenced, yielding several millions of "reads", each 30 to 500 base pairs ("DNA characters") long. In many experiments, e.g., in ChIP-Seq, the task is now to align these reads to a reference genome, i.e., to the known, nearly complete sequence of the organism in question (which may be up to several billion base pairs long
+
+Read Depth
+* Can view with: Samtools mpileup, tview. vcf[tools] & vcf files. igv.
+* Read depth is the amount over overlap at a given reference position. It is distinct from called base depth, which is the count of the same base (the majority found base) at a ref. position.
+
+
+Ngs_mapper -- sequence a genome by referencing a sequence file.
+Pathospehre -- sequence a genome by referencing BLAST database.  
+
+Indels -- insertions/deletions to make an alignment fit. 
+
+
+.sam/.bam files contain alignment information.
+.fastq/.fasta information contain a series of reads. MiSeq etc. machines produce these files. Identification information (ID) and quality (fastq) is stored alongside each read. Often, these reads are filtered by quality, and have had the first & last N nucleotides trimmed out (often the edges are error-prone)
+.vcf files contain information about depth, etc.???
+
+Samtools:
+* view: given a reference region, display all alignments that begin within that region.
+-h, -H, -b, -s
+reference_id:i-j
+* tview: visualize the alignments
+* mpileup: see alignments "sideways." includes position, reference base, and all bases covered by alignments at that position. Also, depth of coverage, quality of covering bases.
+
+
+Base Quality
+* Is logarithmic, we are usually using Phred score.
+
+File Format Specs: https://github.com/samtools/hts-specs
+
+VCF
+* Store variations (those different from reference genome.) guessing genetic variations within a population.
+* 1. Reference Base(s), Alternate finding base(s). Includes insertsions.
+* May or may not be filtered; includes quality.
+* Includes data tags like: Total depth, called base, called base depth, avg quality, etc.
+
+
+SAM/BAM
+* Alignment information, with ref & query IDs. Includes CIGAR string.
+* QNAME includes precise "indexes" of query sequence. 
+* I think SAM files hold the Query read in the sequence field. The CIGAR string is what had to be done to that read to make it align? 
+
+
+CIGAR string
+* Documents the indels and matches necessary to make the alignment work.
+??? Don't knows
+
+
+Contig
+SNP -- single nucleotide that has variation w/in a population
+indel
+Barcoding
+de novo sequencing
