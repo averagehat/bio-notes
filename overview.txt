@@ -1,11 +1,17 @@
 DNA Sequencing
-Sequencing full genomes all at once is expensive and error prone. Instead, we read a large number of small segments at different places on the genome. We can determine the ordering of these segments [only] by finding overlaps between them (and a ref. genome).
+Sequencing full genomes all at once is expensive and error prone. Instead, we read a large number of small segments at different places on the genome. We can determine the ordering of these segments [only] by finding overlaps between them (and a ref. genome). Similarly, Haplotypes can be determined by discovering overlaps between mutations. ie a "haplotype genome" (or part of one?) is assembled based on mutations which overlap.
 
 The advent of high-throughput sequencing (HTS) techniques at the end of the 2000 decade has led to another application of the Burrows–Wheeler transformation. In HTS, DNA is fragmented into small pieces, of which the first few bases are sequenced, yielding several millions of "reads", each 30 to 500 base pairs ("DNA characters") long. In many experiments, e.g., in ChIP-Seq, the task is now to align these reads to a reference genome, i.e., to the known, nearly complete sequence of the organism in question (which may be up to several billion base pairs long
+
+One reference Fasta may have multiple sequences. Dengue has one sequence; Flu has many. 
+A .sam file may have unmapped reads. A .sam file may have multiple reference
+sequences. 
+
 
 Read Depth
 * Can view with: Samtools mpileup, tview. vcf[tools] & vcf files. igv.
 * Read depth is the amount over overlap at a given reference position. It is distinct from called base depth, which is the count of the same base (the majority found base) at a ref. position.
+* Read depth will incfluence variant calling. A bigger read depth means more variation.
 
 
 Ngs_mapper -- sequence a genome by referencing a sequence file.
@@ -42,6 +48,7 @@ SAM/BAM
 * Alignment information, with ref & query IDs. Includes CIGAR string.
 * QNAME includes precise "indexes" of query sequence. 
 * I think SAM files hold the Query read in the sequence field. The CIGAR string is what had to be done to that read to make it align? 
+* Unmapped reads are stored along mapped reads, the only indication that they are unmapped being their flag.
 
 
 CIGAR string
@@ -54,3 +61,15 @@ SNP -- single nucleotide that has variation w/in a population
 indel
 Barcoding
 de novo sequencing
+
+HaploRecon
+* Map haplotypes of a viral cloud 
+* Define haplotypes by using both long & short reads.  
+* Longer reads [give more overlap?]
+* shorter reads give more statistics
+* When a haplotype is defined, all instances of the haplotype are removed from the dataset, and all instances of the haplotype population percentage are defined.
+
+
+USAMRIID PathDiscov:
+march 25 presentation in:
+/media/S_Drive/EIDRU/Bioinformatics_VDB_MCM
