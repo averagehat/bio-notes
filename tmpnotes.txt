@@ -1,0 +1,27 @@
+base caller called before graphsample
+
+
+* :py:mod:`ngs_mapper.run_bwa_on_samplename <ngs_mapper.run_bwa>`
+* :py:mod:`ngs_mapper.tagreads`   <-- will these influence results -- will I need to re-run them on my subsmapled .bam files?
+* :py:mod:`ngs_mapper.base_caller`
+* :doc:`../scripts/gen_flagstats`
+* :py:mod:`ngs_mapper.graphsample`
+
+how restart after changing config.yaml
+had to edit this file?
+vim ~/projects/.n
+
+
+gs_mapper/lib/python2.7/site-packages/ngs_mapper-1.1.0-py2.7.egg/ngs_mapper/config.yaml
+
+
+over and above depth-pick vcf_diff.py & vcf files  are the same
+
+
+Flu compiled: @ 1000 and 500, the vcf_diff results appear to be the same
+
+In the case of flu, I am skimming the depths off of the separate reads and
+then recompiling them -- but there will be a new depth after the recompile
+(i.e., I am skimming a different depth than the actual depth?)
+
+I am getting some hits in the vcf for a depth 500 that are under in my minimized but which are not under 500 in the normal output.

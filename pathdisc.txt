@@ -1,0 +1,19 @@
+source usamriidPathDiscov/usamriidPathDiscov/bin/activate
+(...) man usamriidPathDiscov
+
+?? No module names/file names (code) listed 
+?? perl pods? i.e. man files
+?? why symbolic linking?
+
+step1 
+File: stages/step1.py
+* convert .sff to .fastq if exist
+* change fastq ideas to integers
+
+quality_filter
+File: quality_filter/quality_filter.pl
+?? running prinseq is not mentioned, just setting the options
+* parses param file
+* runs prinseq.pl (package on sourceforge) with param options
+#TODO: the mate if blocks should be refactored 
+* For some reason makes symbolic links between fastq files
