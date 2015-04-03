@@ -1,0 +1,4 @@
+if the problem is Why not remove the consensus?
+Use statistics to find the oversized chunks and split them and create vcfs for all permutations of chunks. 
+
+Add Melanie's solution.

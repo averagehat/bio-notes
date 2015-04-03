@@ -1,19 +1,180 @@
 source usamriidPathDiscov/usamriidPathDiscov/bin/activate
 (...) man usamriidPathDiscov
 
+perlscript.pl  --man
+
 ?? No module names/file names (code) listed 
 ?? perl pods? i.e. man files
 ?? why symbolic linking?
+?? Could we re-use ngs_mapper code (like qual filtering, etc.) in pathdisc?
 
-step1 
+##step1 
 File: stages/step1.py
 * convert .sff to .fastq if exist
 * change fastq ideas to integers
 
-quality_filter
+##quality_filter
 File: quality_filter/quality_filter.pl
 ?? running prinseq is not mentioned, just setting the options
 * parses param file
 * runs prinseq.pl (package on sourceforge) with param options
 #TODO: the mate if blocks should be refactored 
 * For some reason makes symbolic links between fastq files
+
+##host_map
+in host_map/*
+maps with bowtie, also separates out unmapped reads.
+maps using those databases; takes those reads that haven't yet been mapped onto the next database.
+?? Whats up with the databases?
+?? .mate files?:s
+?? well-paired?
+#TODO: if blocks
+R2.discard contains the reads that have been mapped and so will be ignored later in the pipeline.
+
+##ray2_assembly
+assemble the as-yet-unassembled reads using ray2 
+ray2 outputs a fasta file?
+Cap3 does ... more alignment
+
+
+## iterative_blast
+?? could some of this blasting be done in parallel?
+params
+
+# of iterations
+?? sample
+contig?
+phylo?
+
+
+_ Overview
+iterative_blast_phylo.pl takes a series of blast db’s and runs a series of blasts on them. For example, you might run megablast, followed by dc-megablast, followed by blastx. At each stage, the input for the blast is what didn’t blast in the previous stage. Because this module assumes the blast db’s are either NCBI nt or NCBI nr, it is also able to annotate the output with taxid etc.  
+
+EXAMPLE
+       run "iterative_blast_phylo" with paired end .fastq files:
+iterative_blast_phylo.pl --sample sample --paramfile iterative_blast_phylo.param --outputdir /my/output/directory --logs /my/logs/directory --R1 input_R1.fastq --R2 input_R2.fastq --timestamp 121207-11.30
+
+###iterative_blast_phylo.pl
+commmand = iterative_blast_phylo_$run_iteration
+checks for R1 & R2, else die
+for each mate:
+duplicates ray2_assembly.pl until ~163 (converts fastq to fasta if necessary)
+converts fastq to fasta if needed  fastq2fasta.awk; if not needed create a symbolic link
+
+counts lines
+my $cmd = "mkdir -p tmp_".$mate."_$j";
+my $cmd = "$path_scripts/par_block_blast.pl --outputdir tmp_".$mate."_$j --inputfasta $outputdir/$j.$mate.fasta --db $blast_db_list[$i] --blast_type $blast_task_list[$i] --task $blast_task_list[$i] --ninst $ninst_list[$i] --outfile $outputdir/$j.$mate.blast --outheader $outputdir/blast.header --blast_options \"$blast_options_list[$i]\"";		
+
+### perform iterative_blast for each blast in blast_task_list
+
+blast_db_list
+blast_task_list  
+blast_options_list
+inst_list
+
+
+#!/usr/bin/perl
+# local modules:
+# example
+# iterative_blast_phylo.pl --sample $sample --paramfile $pfile --outputdir $path_output/iterative_blast_phylo --logs $path_output/iterative_blast_phylo/logs --R1 input_R1.fastq --R2 input_R2.fastq --timestamp 23672
+# this is the same as iterative blast but it also makes a "phylogeny count." Unlike iterative_blast, this only works with the blast db s nt or nr
+
+# allowed parameters in hash after parsing: (modify for your module)
+# blast_db_list
+# blast_task_list
+# blast_options_list
+# ninst_list
+# taxonomy_nodes
+# taxonomy_names
+# --------------------------------------
+# loop over each mate
+	 > IF defined, and non-zero:
+		IF input fasta file, link to it. ELSE, convert fastq to fasta
+		# count lines in file (linecount.sh)
+		>LOOP blast iteratively over count N
+			# get start time to benchmark
+			# use 1-based, not 0-based, counting
+                        >IF N.$mate.fasta EXISTS: # e.g., if 1.R1.fasta nonzero
+				# make tmp dirs (e.g., mkdir tmp_R1_1)
+				# blast in chunks
+                                > par_block_blast.pl # args: outputdir, input_file(form: query_id gi_number ...), outputfile_annotate, outputfile taxid2queryid, outputfile, nodes.dmp, names.dmp, ntdb
+                                > move .blast entries into .top.blast
+                                > oh probably .blast is ordered. so get the top 1 of each species. 
+                                > run phylogeny_wrapper.sh # args: outputdir, input_file(form: query_id gi_number ...), outputfile_annotate, outputfile taxid2queryid, outputfile, nodes.dmp, names.dmp, ntdb
+				# get reads that didnt blast using:
+                                >get_unblast_reads.pl # args: blast output, fasta input
+                               > count lines (linecount.sh) 
+				# previous no-blast fasta becomes next input 
+                                 >>> symoblic link N.$mate.noblast.fasta N+1.$mate.fasta
+                                 # end time marked here
+				# make link to final output
+                                 > "ln -sf $j.$mate.noblast.fasta iterative_blast_phylo_".$run_iteration.".".$mate; 
+				# get counts per superclass: 
+                                > prepare_plot_phylo_percents.sh
+				# args: outputdir, R1 or R2
+# make reports
+> format_iterative_blast_phylo.pl
+# format_iterative_blast_phylo.pl --outputdir tmp --prefix sample --blastdir iterative_blast_phylo_1 --blast_list megablast,dc-megablast,blastx
+# --------------------------------------
+# ------------------------ THE END -----------------------
+
+?? Where does the blast file come from?ANSWER:  par_block_blast.pl
+
+par_block_blast.pl (parallel) >> produces .blast file
+Wrapper for: blast_wrapper.pl
+* number of fasta file lines must be even (naturally b/c each seq has an ID)
+* chunks the fasta input file into pieces and runs blast_wrapper on them in parallel, then cats them back into the one --outfile.
+* minimum chunk size is 20 sequences.
+* chunk size is equal to the length of the fasta file / $ninst (number of parallel instances) 
+* `split -a 3 -d -l $chunk $inputfasta $prefix`;
+*  temp files: tmplsplit00N
+* creates $ninst paralell processes and displays their PIDs. 
+* temp files:   blastout00N
+* waits for children to finish then compiles into outfile.
+
+### blast_wrapper.pl
+a wrapper for  $ blastx / $blastn
+* if the task is blastsx, run bastx with the -task type. 
+* if the task is defined, use blastn, with that task.
+
+
+phylogeny_wrapper.sh is: # wrapper for the following scripts: 
+ annotate_blast.sh
+ make_phylogeny_pipe.pl
+ weighted_count.pl
+
+
+# to run:
+# phylogeny_wrapper.sh . tmp.blast outphy.txt /data/columbia/scratch/ref/taxonomy/taxdump/nodes.dmp /data/columbia/scratch/ref/taxonomy/taxdump/names.dmp
+
+# takes a blast file and annotates it by using the gi id to get taxid + description
+# IMPORTANT! assume the SECOND column is subject id of the form, e.g., gi|237900821|gb|FJ968794.1|
+# assume BLAST file has NO header
+# scripts directory
+	>IF check to make sure the input has an NCBI GI number in the second column ( e.g., should be of the form gi|237900821|gb|FJ968794.1| ) (ELSE END)
+        >
+		# annotate the blast file   
+                > annotate_blast.sh # args: outputdir, inputfile, outputfile, nt db
+
+		# make a file that maps taxid to description
+		> cut -f2- ${outfile_annotate} > tmp.tableconcat
+		# for each map each uniq taxid to the number of queries mapping to it
+		> ${d}/taxid2queryid.pl ${outfile_annotate} tmp.t2q # args: input, output
+
+		# a bit of formatting 
+		> cat tmp.t2q | sort -k3,3nr | cut -f1,2 > ${outfile_t2q}
+
+		# get counts (weighted) for each taxid	
+		# assumption: col1=qid, col2=taxid
+		> cat ${outfile_annotate} | ${d}/weighted_count.pl > tmp.count	
+
+		# for each taxid, get info about the kingdom, genus, class, etc
+		# pipe in: taxid,   remove trailing tab
+		> cat tmp.count | cut -f1 | ${d}/make_phylogeny_pipe.pl ${nodes} ${names} | awk '{if (NR==1) {print > "header_phy"} else {print}}' | sed 's|\t$||' > tmp.phy
+
+		# get descriptions
+                > /tableconcatlines tmp.count tmp.tableconcat | cut -f3 > tmp.descrip
+		# paste counts to info about the kingdom, genus, class, etc	
+		paste tmp.count tmp.phy tmp.descrip | sort -k2,2nr | awk 'BEGIN{print "taxid\tcount\tsuperkingdom\tkingdom\tclass\torder\tfamily\tgenus\tspecies\tdescrip"}{print}' > ${outfile}
+
+
