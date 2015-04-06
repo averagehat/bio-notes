@@ -1,39 +1,4 @@
-// Cool Class Diagram
-[start]missing arguments->[END]
-[start]have all arguments->[create log files]->[Logs|logs/*.out-e
-(stderr)|logs/*.out-o (stdout)],[create log files]->[LOOP|for each mate]fasta
-exists->[create symbolic link to fasta],[LOOP]-fasta doesn't exsist>[convert
-fastq to fasta],[LOOP]-neither fastq nor fasta exists>[END]
-[covert fastq to fasta]->[LOOP],[LOOP]->[create symbolic link to fastq],
-[create symbolic link to fastq]->[linecount],[convert fastq to
-fasta]->[linecount],
-[linecount]->[LOOP N|for each database in db_list]-.->[tmp_R1_N],[LOOP
-N]->[TMP_R2_N],
-[LOOP N]->[par_block_blast.pl|output to tmp_R1_N|Nth
-db_list|ninst|blast_options_list[N]|]->[phylogen_wrapper.sh],
-[par_block_blast.pl]-.->[blast.header],[par_block_blast.pl]-.->[N.R1.blast],
-[par_block_blast.pl]->[phylogeny_wrapper.sh|taxonomy_nodes|taxonomy_names|blast_db_list[N]]-->[N.R1.blast.ann],
-[N.R1.blast]-.->[phylogeny_wrapper.sh],
-[phylogeny_wrapper.sh]-->[N.blast.ann|annotation
-file],[phylogeny_wrapper.sh]-->[N.blast.t2q|taxid to
-queryid],[phylogeny_wrapper.sh]-->[N.blast.phylo],
-[N.R1.blast]-->[get top blasts],[phylogen_wrapper.sh]->[get top blasts],
-[get top blasts]->[N.top.blast],
-[get top blasts]->[phylogeny_wrapper.sh
-again],[N.top.blast]->[phylogeny_wrapper.sh again],
-[phylogeny_wrapper.sh
-again]->[get_unblast_reads.pl],[N.R1.blast]->[get_unblast_reads.pl],[N.R1.fasta]->[get_unblast_reads.pl],
-[get_unblast_reads.pl]->[N.R1.noblast.fasta],
-[get_unblast_reads.pl]->[linecount.sh],[N.R1.noblast.fasta]-._>[linecount.sh],
-[linecount.sh]->[ln -s|link N.noblast to
-N+1.R1.fasta],[N.R1.noblast.fasta]-.->[ln -s],[ln-s]-.->[N.R1.fasta],
-[ln -s]->[link to final output]->[interative_blast_phylo_.N],
-[N.R1.noblast.fasta]-.->[link to final output],
-[link to final output]-if phylo is
-true>[prepare_plot_phylo_percents.sh|R1/R2|current directory],
-[link to final output]->[LOOP N],[prepare_plot_phylo_percents.sh]->[LOOP N]
-
-
+[start]missing arguments->[END],[start]have all arguments->[create log files]->[Logs|logs%2F*.out-e, (stderr)|logs%2F*.out-o (stdout)],[create log files]->[LOOP|for each mate]fasta, exists->[create symbolic link to fasta],[LOOP]-fasta doesn't exsist>[convert fastq to fasta],[LOOP]-neither fastq nor fasta exists>[END],[LOOP]->[create symbolic link to fastq],[create symbolic link to fastq]->[linecount],[convert fastq to, fasta]->[linecount],[linecount]->[LOOP N|for each database in db_list]-.->[tmp_R1_N],[LOOP, N]->[TMP_R2_N],[LOOP N]->[par_block_blast.pl|output to tmp_R1_N|Nth db_list|ninst|blast_options_list(N)]->[phylogeny_wrapper.sh],[par_block_blast.pl]-.->[blast.header],[par_block_blast.pl]-.->[N.R1.blast],[par_block_blast.pl]->[phylogeny_wrapper.sh|taxonomy_nodes|taxonomy_names|blast_db_list[N]]-->[N.R1.blast.ann], [N.R1.blast]-.->[phylogeny_wrapper.sh], [phylogeny_wrapper.sh]-->[N.blast.ann|annotation, file],[phylogeny_wrapper.sh]-->[N.blast.t2q|taxid to, queryid],[phylogeny_wrapper.sh]-->[N.blast.phylo], [N.R1.blast]-->[get top blasts],[phylogeny_wrapper.sh]->[get top blasts], [get top blasts]->[N.top.blast], [get top blasts]->[phylogeny_wrapper.sh again],[N.top.blast]->[phylogeny_wrapper.sh again], [phylogeny_wrapper.sh again]->[get_unblast_reads.pl],[N.R1.blast]->[get_unblast_reads.pl],[N.R1.fasta]->[get_unblast_reads.pl], [get_unblast_reads.pl]->[N.R1.noblast.fasta], [get_unblast_reads.pl]->[linecount.sh],[N.R1.noblast.fasta]-._>[linecount.sh], [linecount.sh]->[ln -s|link N.noblast to, N+1.R1.fasta],[N.R1.noblast.fasta]-.->[ln -s],[ln-s]-.->[N.R1.fasta], [ln -s]->[link to final output]->[interative_blast_phylo_.N], [N.R1.noblast.fasta]-.->[link to final output],[link to final output]-if phylo is,true>[prepare_plot_phylo_percents.sh|R1%2FR2|current directory], [link to final output]->[LOOP N],[prepare_plot_phylo_percents.sh]->[LOOP N] 
 block_blast.pl && block_blast.sh   are not used.
 
 
@@ -73,4 +38,6 @@ iterative_blast_phylo.pl
 # previous no-blast fasta becomes next input
 system("ln -sf $j.$mate.noblast.fasta $k.$mate.fasta");
 my $cmd = "ln -sf $j.$mate.noblast.fasta iterative_blast_phylo_".$run_iteration.".".$mate;
-
+pident=%identity
+$outfmt="\"6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen qseq\"";
+outputs a "Hit Table" see http://unmc.edu/bsbc/docs/NCBI_blast.pdf
