@@ -1,0 +1,37 @@
+========
+#Testing
+========
+http://www.rbcs-us.com/documents/Why-Most-Unit-Testing-is-Waste.pdf
+The first step when you are debugging your code is to write a new test pinpointing the bug. While it is not always possible to do, those bug catching tests are among the most valuable pieces of code in your project.
+
+If you are in the middle of a development session and have to interrupt your work, it is a good idea to write a broken unit test about what you want to develop next. When coming back to work, you will have a pointer to where you were and get back on track faster.
+
+the testing code will be read as much as or even more than the running code. A unit test whose purpose is unclear is not very helpful in this case.
+
+functional testing (black-box) is particularly useful when you can trace the call stack (and find what screwed up). Maybe less good for (mutable) objects
+
+Functional testing tests a slice of functionality of the whole system
+"verifies a program by checking it against ... design document(s) or specification(s)
+
+Testing for this being non-null on entry to a method is, by the way, not a tautological test — and can be very informative. However, as with most unit tests , it’s better to make th is an assertion than to pepper your test framework with such checks.  More on that below testing. One is to use it as a learning tool: to learn more about the program and how it works.  This is why it works to walk away from the terminal for a while
+
+System tests drop you almost im mediately into this position of reflection. You still ne ed the detailed information, of course, and that’s where debugging comes in.  Debugging is the use of tools and devices to help isol ate a bug. Debugging is not testing. It is ad-hoc and done on a bug-by-bug basis. Unit tests can be a useful debugging tool. In my own experience I have found that a combination of many tools wo rk best, and that the most effective are data value traps, and access to the global context including all data values an d the occasional stack trace
+
+ debugging isn’t what you do sitting in front of your program with a debugger; it’s what you do leaning bac k in your chair starin g at the ceiling, or discussing the bug with the team
+
+Regression tests should be system-level Use unit tests for key algorithms Turn unit tests into assertions. 
+
+In your example, if x is a value set via a user interface or from an external source, an exception is best.
+
+If x is only set by your own code in the same program, go with an assertion.
+
+Fuzz testing; Behave; Robot Framework; System tests
+BDD 
+
+:!cat %
+git ls-files
+
+
+__main__ should do minimal to allow better, more accurate coverage of functionality via unit tests
+main() should return an exit value.
+if __name__ == "__main__": sys.exit(main())  

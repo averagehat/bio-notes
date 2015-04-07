@@ -1,0 +1,13 @@
+
+
+http://kachayev.github.io/talks/uapycon2012/#/40
+avoid state; immutable data; pattern matching? piping
+currying? pmap?
+from operator import add, itemgetter, mul
+from functools import partial
+partial(func, <first_arg>)
+Classes (object initializers) are callable, as are object methods)
+https://docs.python.org/2/howto/functional.html
+
+
+Testing is easier because each function is a potential subject for a unit test. Functions don’t depend on system state that needs to be replicated before running a test; instead you only have to synthesize the right input and then check that the output matches expectations.
