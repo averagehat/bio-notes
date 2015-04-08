@@ -35,3 +35,13 @@ git ls-files
 __main__ should do minimal to allow better, more accurate coverage of functionality via unit tests
 main() should return an exit value.
 if __name__ == "__main__": sys.exit(main())  
+
+
+Create pybot functions to handle/compare fastq/fasta/bam(?) files (order of a fastq file should not matter)
+look at how biopython and PySam (etc . . . ) test their code
+
+
+what existing field -- or project -- does the kind of file transformations present in bioinformatics? So I can figure out testing best practices.
+i.e. R, pandas, 
+html parser?
+
