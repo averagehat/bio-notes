@@ -1,0 +1,48 @@
+
+amos_obj.redspeline name change
+USAMRIID test of version 4.1 – last changes that need to be made prior to release to Andy for Pathosphere?
+Version 4.2: Diamond integration updates
+Version 4.2: SNAP integration updates
+Version 4.2: Orf_Filter clarifications (version 4.3?)
+Pipeline wishlist
+
+compared output files
+limit # singletons to look at (bc can take a long time)
+SNAP is an option in the param file
+Pathosphere is built from the param file
+orf_filter should be used by Diamond? 
+what's the point of blasting contigs that don't have open reading frames? 
+* sift through blast results, filtering out 
+* three iterative blast steps? 
+* USAMRIID stopped including the BLASTX b/c it's too slow
+* 1 is contigs, 2 is 
+* currently 
+* put unblasted FASTA file through orf then through BLASTX
+* if diamond is as fast as it says it is, maybe could try it on reads
+* but never use BLASTX as part of pipeline, always manually after 
+* but probably will take BLASTX out of pathosphere
+ORF filter in 4.2
+
+
+expr $(wc -l ecoli.small.fastq | awk '{print $1}') / 4
+16384 READS is
+-> 3.6M
+
+5461 reads = 1MB
+DIAMOND creator has a nucleotide equivalent (algorithm)--wish-wish-list
+metascope
+wait for pathosphere to 4.2
+4.2
+April 30
+4.3 may be final version
+* Status indicator bar
+* 
+Pathosphere in May
+know how many reads go to each contig
+-> mapped back to contigs
+-> construct from overlapping kmers
+* what was he saying was the reason a read wouldn't map to a contig?
+Pull out superkingdoms 
+
+       )
+

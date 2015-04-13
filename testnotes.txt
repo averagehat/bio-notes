@@ -43,5 +43,25 @@ look at how biopython and PySam (etc . . . ) test their code
 
 what existing field -- or project -- does the kind of file transformations present in bioinformatics? So I can figure out testing best practices.
 i.e. R, pandas, 
-html parser?
+html parted parts. When testing the complete application, it is an advantage to use well-tested parts. It is the classic bottom-up approach of composing functionality from simpler parts. In the example above, if the pool functionality has been unit tested, I can concentrate on making sure it works well with the rest of the system when testing the complete system. If it was not unit tested, I might still find problems with how the pool works, but it could take more effort to find where in the code the problem is, since it could be anywhere.\
+
+
+In my experience, unit tests are most valuable when you use them for algorithmic logic. They are not particularly useful for code that is more coordinating in its nature. Coordinating code often requires a lot of (mocked) context for unit testing, but the tests themselves are not very interesting. This type of code does not benefit a great deal from unit testing, and is instead better tested in integration testing. For more on the different types of code, see Selective Unit Testing – Costs and Benefits.
+
+
+Sometimes the complete feature you are working on may take a while to finish, or it requires other parts to be done first. Thus it is not possible to integration test it at each step of the way. With unit tests, you get feedback immediately if you make a mistake. 
+
+
+
+
+In my experience, if your code is not obvious at a single glance – so working out its exact behaviour would take time and careful thought – then additional design and verification assistance (e.g., through unit testing) is essential to be sure that all your cases are handled properly. For example, if you’re coding a system of business rules or parsing a complex hierarchical string format, there will be too many possible code paths to check at a glance. In scenarios like these, unit tests are extremely helpful and valuable.
+
+Conversely, if your code is basically obvious – so at a glance you can see exactly what it does – then additional design and verification (e.g., through unit testing) yields extremely minimal benefit, if any. For example, if you’re writing a method that gets the current date and the amount of free disk space, and then passes them both to a logging service, the source code listing says everything you need to say about that design. What would a unit test add here, given that you’d be mocking out the clock and disk space provider anyway?
+
+Click
+Bats
+
+pandas CI folder
+
+Seperate out all of the API-dependent (and I/O) pieces, so that the algorithmic part is simply manipulation of DataFrames. er?
 
