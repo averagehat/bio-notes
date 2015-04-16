@@ -65,3 +65,33 @@ pandas CI folder
 
 Seperate out all of the API-dependent (and I/O) pieces, so that the algorithmic part is simply manipulation of DataFrames. er?
 
+
+Log To Console and Log 
+Should Be Equal As Files (also saves file diff) 
+could, instead of having files, store the strings as pybot variables. 
+
+
+Travis can be told to wait and not shut down when hanging 
+
+jibber:
+[pd.lib.infer_dtype(df[col]) for col in df.columns]
+/\vcb\=[^cgta]
+
+
+can debug
+have to pip install robotframeword-debug....
+use DebugLibrary
+
+Debug
+
+can execute commands in the debugger i.e.
+log to consolomestuff
+
+plit() seems to force good output and passes should be equal
+
+ --existing kernel-22903.json
+ 
+ 
+ 
+ runs joinlines.sh on Contigs.fasta (which was ray output) then caps itan strip/split strings normally ie.e. ${mystring.split()} 
+
