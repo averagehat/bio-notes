@@ -1,0 +1,60 @@
+Ray Communities (profiling metagenomes with
+Ray)
+●
+Ray Surveyor (comparing DNA sequencing samples
+without reference; Ray -run-surveyor)
+
+
+Mixing reads from different technologies (454 +
+Illumina)
+
+Mixing reads from different technologies (454 +
+Illumina)
+
+Mixing reads from different technologies (454 +
+Illumina)
+
+38
+Compare genomic content without a ref.
+with Surveyor
+
+realtime kmers
+
+https://github.com/bigdatagenomics/adam
+PBJelly (https://sourceforge.net/p/pb-jelly/wiki/Home/) to fill captured gaps. This does require captured gaps, though (but I think there may be a recent version of PBJelly that works with uncaptured gaps).
+
+So, try scaffolding your data with your existing 500bp-insert library, and see how good the scaffolding is; if you end up with ~20MB of scaffolds, you should be able to just use PBJelly with PacBio data to fill them in. Otherwise a long mate pair library is useful for scaffolding prior to filling gaps with PBJelly, but that's expensive too.
+
+
+For error correction of PacBio with Illumina I would recommend ECTools (https://github.com/jgurtowski/ectools)over PacBioToCA, it is a lot more computationally efficient.
+Separate assembly and merging can work quite well. For the PacBio assembly the latest version of HGAP (.3) allows self correction at lower coverage, but you need to be aware of the possibility of introducing missasemblies.
+
+
+Thanks for your reply. I have read somewhere another strategy- producing assembly with the illumina and pacbio reads (low coverage) separately with gaps and then merge them with minimus2. Would it be a better approach?
+
+If you still need to do assembly merge, you can use GAM-NGS:
+
+http://www.biomedcentral.com/1471-2105/14/S7/S6
+
+Ray: http://genomebiology.com/2012/13/12/R122, biostars/seqanswers ray thread
+
+http://www.theplatform.net/2015/03/03/dna-sequencing-not-quite-hpc-yet/
+You may try to use SPAdes for hybrid Illumina + PacBio assembly. It will happily use your PacBio data both for filling in unrepresented parts in your Illumina data and resolve repeats.
+
+the idea was short reads for coverage, pbio for gaps	
+error correction of pbio with illumina
+
+http://en.wikipedia.org/wiki/Hybrid_genome_assembly#Hybrid_Genome_Assembly
+http://www.mscience.com.au/upload/pages/pacbio/technical-note---de-novo-and-hybrid-assembly-2012.pdf?1428915347
+
+https://github.com/peterhj/celera-workflow
+https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/Large-Genome-Assembly-with-PacBio-Long-Reads
+http://schatzlab.cshl.edu/presentations/2013-06-18.PBUserMeeting.pdf
+https://github.com/jgurtowski/ectools
+http://www.biomedcentral.com/1471-2164/14/675
+http://www.researchgate.net/post/Does_anyone_have_experience_with_PacBio
+http://journal.frontiersin.org/article/10.3389/fmicb.2015.00224/full
+http://cami-challenge.org/sites/cami-challenge/files/MAlbertsen_CAMI_small.pdf
+http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3731737/
+
+http://www.culturaldc.org/2015/04/banished-productions-tyger-at-culturaldcs-mead-theatre-april-16-25/
